@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer for phonebook source update
+
+[Timer]
+OnActiveSec=1 hour
+OnUnitInactiveSec=1 day
+
+[Install]
+WantedBy=timers.target

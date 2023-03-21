@@ -1,0 +1,10 @@
+[Unit]
+Description=Update centralized phonebook
+Requires=freepbx.service
+After=freepbx.service
+
+[Service]
+Type=oneshot
+ExecStart=podman exec freepbx /usr/share/phonebooks/phonebook
+WorkingDirectory=%S/state
+SyslogIdentifier=%u/%N
