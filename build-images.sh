@@ -98,6 +98,7 @@ buildah config \
 buildah run "${container}" apt-get update
 buildah run "${container}" apt install -y gnupg mycli libldap2-dev zip
 buildah run "${container}" apt install -y cron # TODO needed by freepbx cron module. To remove.
+buildah run "${container}" apt install -y python3-mysql.connector python3-pyodbc python3-pycurl # Phonebook
 
 # install PHP additional modules
 buildah run "${container}" docker-php-source extract
@@ -159,9 +160,16 @@ buildah run "${container}" apt-get autoremove --yes
 buildah run "${container}" rm -rf /var/lib/dpkg/info/* /var/lib/cache/* /var/lib/log/*
 buildah run "${container}" touch /var/lib/dpkg/status
 
+# Install centralized phonebook update script
+buildah run "${container}" /bin/sh <<'EOF'
+mkdir -p /usr/share/phonebooks/
+curl -L https://github.com/nethesis/nethserver-phonebook-mysql/archive/refs/heads/ns8.tar.gz -o - | tar xzp --strip-component=5 -C /usr/share/phonebooks/ nethserver-phonebook-mysql-ns8/root/usr/share/phonebooks
+EOF
+
 # Set files permissions
 buildah run "${container}" /bin/sh <<'EOF'
 mkdir -p \
+	/etc/phonebook/sources.d/ \
 	/var/run/asterisk/ \
 	/var/www/html/freepbx/admin/assets/less/cache \
 	/var/www/html/freepbx/admin/modules/calendar/assets/less/cache \
@@ -178,6 +186,7 @@ mkdir -p \
 	/var/www/html/freepbx/admin/modules/userman/assets/less/cache \
 	/var/www/html/freepbx/admin/modules/voicemail/assets/less/cache
 chown -R asterisk:asterisk \
+	/etc/phonebook/sources.d/ \
 	/var/run/asterisk/ \
         /var/www/html/freepbx/admin/assets/less/cache \
         /var/www/html/freepbx/admin/modules/calendar/assets/less/cache \

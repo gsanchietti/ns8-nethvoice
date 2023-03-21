@@ -16,22 +16,15 @@ ExecStartPre=bash -c "while [ ! -f certificates/NethServer.key ]; do sleep 1; do
 
 ExecStart=/usr/bin/podman run \
     --detach \
+    --init \
     --conmon-pidfile=%t/phonebook.pid \
     --cidfile=%t/phonebook.ctr-id \
     --cgroups=no-conmon \
     --log-opt=tag=%u \
     --replace --name=%N \
-    --env=AMPDBHOST \
-    --env=AMPDBNAME \
-    --env=AMPDBUSER \
-    --env=AMPDBPASS \
     --env=PHONEBOOK* \
-    --env=NETHVOICE* \
-    --env=NETHCTI* \
+    --env=NETHVOICE_MARIADB_PORT \
     --volume=/dev/log:/dev/log \
-    --volume=scripts:/usr/share/phonebooks/scripts/:z \
-    --volume=pbooksources:/etc/phonebook/sources.d/:z \
-    --volume=post_scripts:/usr/share/phonebooks/post_scripts/:z \
     --volume=tancredi:/var/lib/tancredi:z \
     --volume=./certificates:/etc/certificates:Z \
     --network=host \
