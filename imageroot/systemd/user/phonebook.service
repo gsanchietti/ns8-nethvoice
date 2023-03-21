@@ -10,7 +10,7 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%S/state/environment
 WorkingDirectory=%S/state
 Restart=always
-ExecStartPre=/bin/rm -f %t/phonebook.pid %t/janus.ctr-id
+ExecStartPre=/bin/rm -f %t/phonebook.pid %t/phonebook.ctr-id
 ExecStartPre=bash -c "while [ ! -f certificates/NethServer.pem ]; do sleep 1; done"
 ExecStartPre=bash -c "while [ ! -f certificates/NethServer.key ]; do sleep 1; done"
 
