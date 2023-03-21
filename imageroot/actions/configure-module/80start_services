@@ -14,3 +14,5 @@ systemctl --user enable --now nethcti-server.service
 systemctl --user enable --now nethcti-ui.service
 systemctl --user enable --now tancredi.service
 systemctl --user enable --now phonebook.service
+systemctl --user enable --now dhgen.timer
+systemctl --user enable --now phonebook-update.timer
