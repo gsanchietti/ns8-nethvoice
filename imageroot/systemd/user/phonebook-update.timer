@@ -2,8 +2,9 @@
 Description=Timer for phonebook source update
 
 [Timer]
-OnActiveSec=1 hour
-OnUnitInactiveSec=1 day
+OnCalendar=hourly
+Persistent=true
+Unit=phonebook-update.service
 
 [Install]
 WantedBy=timers.target
