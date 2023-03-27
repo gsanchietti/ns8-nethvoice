@@ -81,6 +81,10 @@ container=$(buildah from docker.io/library/php:5.6-apache)
 buildah add "${container}" freepbx/ /
 buildah run "${container}" groupadd -g 991 -r asterisk
 buildah run "${container}" useradd -u 990 -r -s /bin/false -d /var/lib/asterisk -M -c 'Asterisk User' -g asterisk asterisk
+buildah run "${container}" /bin/sh <<'EOF'
+curl -L https://github.com/nethesis/ns8-nethvoice/releases/download/0.0.0/freepbx14.tar.gz | tar xzv -C /var
+EOF
+buildah run "${container}" chown asterisk:asterisk /var/www/html/freepbx
 
 buildah run "${container}" /bin/sh <<EOF
 sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:\$\{APACHE_PORT\}>/' /etc/apache2/sites-enabled/000-default.conf
