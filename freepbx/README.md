@@ -1,3 +1,7 @@
+# FreePBX container
+
+Patches used after import:
+```diff
 --- imageroot/freepbx/root/var/www/html/freepbx/admin/libraries/BMO/PKCS.class.php.ori	2022-09-16 10:13:24.195498228 +0200
 +++ imageroot/freepbx/root/var/www/html/freepbx/admin/libraries/BMO/PKCS.class.php	2022-09-16 10:12:58.523530475 +0200
 @@ -478,14 +478,8 @@
@@ -49,3 +53,4 @@
          //Reload CTI
          system("/var/www/html/freepbx/rest/lib/ctiReloadHelper.sh > /dev/null 2>&1 &");
      } catch (Exception $e) {
+```
