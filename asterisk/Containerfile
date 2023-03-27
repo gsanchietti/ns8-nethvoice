@@ -13,8 +13,29 @@ RUN groupadd -g 991 -r asterisk \
         asterisk18-voicemail-odbcstorage \
         unixODBC \
         mysql-connector-odbc \
+        unzip \
+        wget \
     && rm -fr /var/cache/yum
-COPY --chown=asterisk:asterisk etc/asterisk /etc/asterisk
+RUN mkdir download \
+    && pushd download \
+    && mkdir -p /var/lib/asterisk/sounds/{it,en,es,de,fr} \
+    && wget -nv https://github.com/nethesis/nethvoice-langs/releases/download/2.0.0/asterisk-sounds-core-it-2.11.1.zip \
+    && wget -nv https://github.com/nethesis/nethvoice-langs/releases/download/2.0.0/asterisk-sounds-extra-it-2.11.1.zip \
+    && unzip -o 'asterisk-sounds-*-it-*.zip' -d /var/lib/asterisk/sounds/it \
+    && wget -nv --no-check-certificate http://www.asterisksounds.org/sites/asterisksounds.org/files/sounds/es-ES/download/asterisk-sounds-core-es-ES-2.9.15.zip \
+    && wget -nv --no-check-certificate https://www.asterisksounds.org/sites/asterisksounds.org/files/sounds/es-ES/download/asterisk-sounds-extra-es-ES-2.9.15.zip \
+    && unzip -o 'asterisk-sounds-*-es-*.zip' -d /var/lib/asterisk/sounds/es \
+    && wget -nv --no-check-certificate https://www.asterisksounds.org/sites/asterisksounds.org/files/sounds/fr-FR/download/asterisk-sounds-core-fr-FR-2.3.10.zip \
+    && wget -nv --no-check-certificate https://www.asterisksounds.org/sites/asterisksounds.org/files/sounds/fr-FR/download/asterisk-sounds-extra-fr-FR-2.3.10.zip \
+    && unzip -o 'asterisk-sounds-*-fr-*.zip' -d /var/lib/asterisk/sounds/fr \
+    && wget -nv --no-check-certificate https://www.asterisksounds.org/sites/asterisksounds.org/files/sounds/de/download/asterisk-sounds-core-de-2.11.19.zip \
+    && wget -nv --no-check-certificate https://www.asterisksounds.org/sites/asterisksounds.org/files/sounds/de/download/asterisk-sounds-extra-de-2.11.19.zip \
+    && unzip -o 'asterisk-sounds-*-de-*.zip' -d /var/lib/asterisk/sounds/de \
+    && wget -nv --no-check-certificate https://github.com/nethesis/nethvoice-langs/releases/download/2.0.0/asterisk-sounds-core-en-2.11.1.zip \
+    && wget -nv --no-check-certificate https://github.com/nethesis/nethvoice-langs/releases/download/2.0.0/asterisk-sounds-extra-en-2.11.1.zip \
+    && unzip -o 'asterisk-sounds-*-en-*.zip' -d /var/lib/asterisk/sounds/en \
+    && popd && rm -rf download
+COPY --chown=asterisk:asterisk etc/asterisk /etc/asterisk /var/lib/asterisk/sounds
 COPY etc/odbc.ini /etc/odbc.ini
 COPY var/lib/asterisk /var/lib/asterisk
 RUN chown asterisk:asterisk /var/lib/asterisk/db
